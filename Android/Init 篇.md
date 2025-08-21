@@ -1,4 +1,5 @@
 `init` 进程是 Linux 系统中用户空间的第一个进程，进程号固定为 1。Kernel 启动后，在用户空间启动 `init` 进程，并调用 `init` 中的 `main()` 方法执行 `init` 进程的职责。
+
 ```cpp
 int main(int argc, char** argv) {
 #if __has_feature(address_sanitizer)
