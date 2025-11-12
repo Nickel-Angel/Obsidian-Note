@@ -380,6 +380,8 @@ MessageQueue(boolean quitAllowed) {
 
 本函数用于提取下一个 Message，通过调用 `nativePollOnce()` 来等待新的消息，当设置 `nextPollTimeoutMillis` 为 -1 时，表明队列为空，需要一直等待下去。
 
+具体的实现逻辑为：外层循环不断尝试提取异步消息，如果提取到了异步消息，则首先检查其预计的作用时间，如果作用时间没到的话，则会跳过本次循环。每次循环的开头会进行对应时间的等待。
+
 ```Java
 Message next() {
     if (mUseConcurrent) {

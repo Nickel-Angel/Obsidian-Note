@@ -4,13 +4,11 @@
 ![[Binder IPC.png]]
 
 在安卓系统中，由于所有进程用户空间彼此隔离，但共享一个内核空间，所以我们可以通过 `icotl`，使得内核和共享的用户空间可以相互交换数据，进而实现进程间的通信。
-
 ## Binder 原理
-
 Binder 也是一种 IPC 机制，其采用 C/S 架构，如下图所示：
 ![[Binder Client-Server.png]]
 
-这里 Service Manager 是 Native 层（C++）的，并非 Framework 层的机制。Service Manager 是整个 Binder 通信机制的大管家，是 Android 进程间通信机制Binder的守护进程。当 Service Manager 启动之后，Client 端和 Server 端通信时都需要先获取 Service Manager 接口，才能开始通信服务。
+这里 Service Manager 是 Native 层（C++）的，并非 Framework 层的机制。Service Manager 是整个 Binder 通信机制的大管家，是 Android 进程间通信机制 Binder 的守护进程。当 Service Manager 启动之后，Client 端和 Server 端通信时都需要先获取 Service Manager 接口，才能开始通信服务。
 
 图中 Client/Server/ServiceManage 之间的相互通信都是基于 Binder 机制。既然基于 Binder 机制通信，那么同样也是 C/S 架构，则图中的 3 大步骤都有相应的 Client 端与 Server 端。
 
@@ -21,15 +19,12 @@ Binder 也是一种 IPC 机制，其采用 C/S 架构，如下图所示：
 | 使用服务 | Client   | Server          |
 
 所有的交互方式都是通过 Binder 驱动进行交互的，其中 Service Manager 和 Binder 驱动都是安卓平台的基础架构。
-
 ## C/S 模式
-
 BpBinder（客户端）和 BBinder（服务端）都是 Android 中 Binder 通信相关的代表，它们都从 IBinder 类中派生而来，关系图如下：
 ![[Binder Classgraph.png]]
 - Client 端：`BpBinder.transact()` 来发送事务请求；
 - Server 端：`BBinder.onTransact()` 会接收到相应事务。
 ## Binder 驱动概述
-
 Binder 驱动是 Android 专用的，但底层的驱动架构与 Linux 驱动一样。Binder 驱动在以 misc 设备进行注册，作为虚拟字符设备，没有直接操作硬件，只是对设备内存的处理。主要是驱动设备的初始化 `binder_init`，打开 `binder_open`，映射 `binder_mmap`，数据操作 `binder_ioctl`。
 
 ![[Binder Driver.png]]
@@ -45,9 +40,7 @@ ret = binder_alloc_shrinker_init();
 if (ret)
     return ret;
 ```
-
 然后就是为 binder 创建相应调试文件，并且在 binder 这个目录下创建 proc 这个子目录。
-
 ```C
 binder_debugfs_dir_entry_root = debugfs_create_dir("binder", NULL);
 
@@ -61,9 +54,7 @@ binder_for_each_debugfs_entry(db_entry)
 binder_debugfs_dir_entry_proc = debugfs_create_dir("proc",
                     binder_debugfs_dir_entry_root);
 ```
-
 这里如果未启用 binder 文件系统，并且 `binder_devices_param` 中设置了相关参数，那么就依次使用 `init_binder_device()` 为这些设备创建相应的设备节点。
-
 ```C
 if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
 strcmp(binder_devices_param, "") != 0) {
