@@ -34,4 +34,5 @@
 | L3ProvisioningState           | IP/DNS 处理完成之后的一个状态，负责网络配置和更新                                                                   |
 | L3ConnectedState              | 网络连接 IP 分配完成后进入该状态。在此状态会监控网络状态变化，例如 IP 丢失，网络评分变化                                               |
 | RoamingState                  | 表示进入漫游状态。在网络异常之后先采用漫游进行恢复，如果漫游之后仍然异常，那么就直接断开，此特性需要打开配置：`config_wifiEnableLinkedNetworkRoaming` |
-|                               |                                                                                                |
+
+![](chores_img/wifienabled.png)
